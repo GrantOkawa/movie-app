@@ -1,13 +1,12 @@
-import React from 'react';
-import Search from './components/Search';
-import Spinner from './components/Spinner';
-import MovieCard from './components/MovieCard';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import {useDebounce} from 'use-debounce';
+import { useEffect, useState } from 'react'
+import Search from './components/Search.jsx'
+import Spinner from './components/Spinner.jsx'
+import MovieCard from './components/MovieCard.jsx'
+import { useDebounce } from 'react-use'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = import.meta.env.VITE_API_KEY; 
+
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const API_OPTIONS = {
   method: 'GET',
@@ -18,13 +17,14 @@ const API_OPTIONS = {
 }
 
 const App = () => {
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [searchTerm, setSearchTerm] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [movieList, setMovieList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [debouncedSearchTerm, setDebounceSearchTerm] = useState('');
 
-  useDebounce(() => (searchTerm), 50, [searchTerm])
+  const [movieList, setMovieList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
   const fetchMovies = async ( query = '') => {
     setIsLoading(true);
